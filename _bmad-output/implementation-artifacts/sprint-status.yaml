@@ -1,0 +1,106 @@
+# generated: 2026-03-13
+# project: SIRA
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog -> in-progress: Automatically when first story is created (via create-story)
+#   - in-progress -> done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Implementation complete, ready for review
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-03-13
+project: SIRA
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  # Epic 1: 프로젝트 초기화 & 코어 엔진
+  epic-1: done
+  1-1-turborepo-monorepo-init: done
+  1-2-frontmatter-schema-parser: done
+  1-3-index-engine: done
+  1-4-sira-init-cli: done
+  epic-1-retrospective: optional
+
+  # Epic 2: 팀 설정 & 권한 관리
+  epic-2: done
+  2-1-team-member-config: done
+  2-2-rbac-permission: done
+  2-3-github-oauth: done
+  2-4-api-key-management: done
+  epic-2-retrospective: optional
+
+  # Epic 3: CLI 태스크 조회 & 관리
+  epic-3: done
+  3-1-sira-query: done
+  3-2-cli-task-status: done
+  3-3-cli-task-detail: done
+  epic-3-retrospective: optional
+
+  # Epic 4: 웹 대시보드 — 팀 현황 & 태스크 뷰
+  epic-4: done
+  4-1-dashboard-layout-design-system: done
+  4-2-team-dashboard-stats: done
+  4-3-task-table-view: done
+  4-4-kanban-board: done
+  4-5-task-detail-view: done
+  4-6-member-profile: done
+  4-7-project-view: done
+  4-8-gantt-view: done
+  4-9-command-palette: done
+  epic-4-retrospective: optional
+
+  # Epic 5: 양방향 싱크 (Git <-> Dashboard)
+  epic-5: done
+  5-1-github-webhook: done
+  5-2-dashboard-git-sync: done
+  5-3-field-level-merge: done
+  5-4-sse-realtime: done
+  epic-5-retrospective: optional
+
+  # Epic 6: AI 협업 태스크 분해 & 할당
+  epic-6: done
+  6-1-sira-protocol-schema: done
+  6-2-sira-decompose: done
+  6-3-task-assignment: done
+  6-4-task-approval-ai-update: done
+  epic-6-retrospective: optional
+
+  # Epic 7: AI 인텔리전스 — 상태 추론 & 자연어 질의
+  epic-7: done
+  7-1-git-activity-inference: done
+  7-2-ai-suggestion-approval: done
+  7-3-sira-ask: done
+  7-4-ai-performance-privacy: done
+  epic-7-retrospective: optional
+
+  # Epic 8: 픽셀 오피스 & 게이미피케이션
+  epic-8: done
+  8-1-pixel-office: done
+  epic-8-retrospective: optional

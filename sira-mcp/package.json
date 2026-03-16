@@ -1,0 +1,25 @@
+{
+  "name": "sira-mcp",
+  "version": "0.1.0",
+  "description": "SIRA MCP Server - AI-Native Task Management for Developers",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "sira-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "gray-matter": "^4.0.3",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

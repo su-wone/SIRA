@@ -1,0 +1,25 @@
+{
+  "name": "sira",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "sira": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@sira/core": "*",
+    "commander": "^14.0.3",
+    "js-yaml": "^4.1.1"
+  },
+  "devDependencies": {
+    "@sira/tsconfig": "*",
+    "@types/js-yaml": "^4.0.9",
+    "tsup": "^8",
+    "typescript": "^5"
+  }
+}

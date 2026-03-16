@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIRA Visual Foundation Demo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap');
+
+  :root {
+    /* Brand */
+    --primary: #A78BFA;
+    --primary-hover: #8B5CF6;
+    --primary-muted: rgba(124, 58, 237, 0.12);
+
+    /* Dark Theme */
+    --bg-base: #09090B;
+    --bg-surface: #18181B;
+    --bg-elevated: #27272A;
+    --border: #3F3F46;
+    --text-primary: #FAFAFA;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+
+    /* Status (Pipeline) */
+    --status-todo: #6B7280;
+    --status-design: #F472B6;
+    --status-ready-dev: #3B82F6;
+    --status-progress: #EAB308;
+    --status-ready-qa: #A855F7;
+    --status-ready-release: #14B8A6;
+    --status-done: #22C55E;
+    --status-critical: #EF4444;
+
+    /* Priority */
+    --priority-critical: #EF4444;
+    --priority-high: #F97316;
+    --priority-medium: #EAB308;
+    --priority-low: #6B7280;
+
+    /* AI */
+    --ai-suggest: #22D3EE;
+
+    /* Spacing */
+    --sp-xs: 4px;
+    --sp-sm: 8px;
+    --sp-md: 12px;
+    --sp-lg: 16px;
+    --sp-xl: 24px;
+    --sp-2xl: 32px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .demo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--sp-xl);
+  }
+
+  h1 { font-size: 30px; font-weight: 700; line-height: 1.2; margin-bottom: var(--sp-xs); }
+  h2 { font-size: 20px; font-weight: 600; line-height: 1.35; margin: var(--sp-2xl) 0 var(--sp-lg); color: var(--primary); }
+  h3 { font-size: 16px; font-weight: 600; line-height: 1.4; margin: var(--sp-xl) 0 var(--sp-md); }
+  .subtitle { color: var(--text-secondary); font-size: 14px; margin-bottom: var(--sp-2xl); }
+
+  /* Color Swatches */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--sp-md); }
+  .color-swatch {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .color-swatch .preview { height: 60px; }
+  .color-swatch .info { padding: var(--sp-sm) var(--sp-md); background: var(--bg-surface); }
+  .color-swatch .name { font-size: 12px; font-weight: 600; }
+  .color-swatch .hex { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+
+  /* Stats Bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--sp-sm);
+    margin: var(--sp-lg) 0;
+  }
+  .stat-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: var(--sp-lg);
+  }
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-bottom: var(--sp-xs); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.02em; }
+  .stat-number { font-size: 30px; font-weight: 700; }
+  .stat-sub { font-size: 12px; color: var(--text-secondary); margin-top: var(--sp-xs); }
+
+  @keyframes pulse-critical {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .stat-critical .stat-number {
+    color: var(--status-critical);
+    animation: pulse-critical 2s ease-in-out infinite;
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    gap: 4px;
+  }
+  .badge-todo { background: rgba(107, 114, 128, 0.15); color: var(--status-todo); }
+  .badge-design { background: rgba(244, 114, 182, 0.15); color: var(--status-design); }
+  .badge-ready-dev { background: rgba(59, 130, 246, 0.15); color: var(--status-ready-dev); }
+  .badge-progress { background: rgba(234, 179, 8, 0.15); color: var(--status-progress); }
+  .badge-ready-qa { background: rgba(168, 85, 247, 0.15); color: var(--status-ready-qa); }
+  .badge-ready-release { background: rgba(20, 184, 166, 0.15); color: var(--status-ready-release); }
+  .badge-done { background: rgba(34, 197, 94, 0.15); color: var(--status-done); }
+  .badge-critical { background: rgba(239, 68, 68, 0.15); color: var(--status-critical); }
+  .badge-ai { background: rgba(34, 211, 238, 0.15); color: var(--ai-suggest); border: 1px solid rgba(34, 211, 238, 0.3); }
+
+  .badge-priority-high { background: rgba(249, 115, 22, 0.15); color: var(--priority-high); }
+  .badge-priority-medium { background: rgba(234, 179, 8, 0.15); color: var(--priority-medium); }
+  .badge-priority-low { background: rgba(107, 114, 128, 0.15); color: var(--priority-low); }
+
+  /* Avatar */
+  .avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+  }
+  .avatar-ai {
+    border: 2px solid var(--primary);
+    position: relative;
+  }
+  .avatar-ai::after {
+    content: ''; position: absolute; top: -3px; right: -3px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--ai-suggest); border: 2px solid var(--bg-base);
+  }
+
+  /* Table */
+  .task-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--sp-lg) 0;
+  }
+  .task-table th {
+    text-align: left;
+    padding: var(--sp-sm) var(--sp-md);
+    font-size: 12px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+  }
+  .task-table td {
+    padding: var(--sp-sm) var(--sp-md);
+    border-bottom: 1px solid rgba(63, 63, 70, 0.5);
+    height: 40px;
+    vertical-align: middle;
+  }
+  .task-table tr:hover { background: var(--primary-muted); }
+  .task-id { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-secondary); }
+  .task-title { font-weight: 400; }
+
+  .project-group {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: var(--sp-lg) 0;
+  }
+  .project-header {
+    padding: var(--sp-md) var(--sp-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-sm);
+    border-bottom: 1px solid var(--border);
+  }
+  .project-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .project-name { font-weight: 600; }
+  .project-count {
+    font-size: 12px; color: var(--text-muted);
+    background: var(--bg-elevated); padding: 2px 8px; border-radius: 10px;
+  }
+
+  /* Member Card */
+  .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-md); }
+  .member-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: var(--sp-lg);
+  }
+  .member-header { display: flex; align-items: center; gap: var(--sp-md); margin-bottom: var(--sp-md); }
+  .member-name { font-weight: 600; font-size: 16px; }
+  .member-status { font-size: 12px; color: var(--status-done); background: rgba(34,197,94,0.15); padding: 2px 8px; border-radius: 6px; }
+  .member-tasks { font-size: 13px; color: var(--text-secondary); }
+  .member-task-item { padding: var(--sp-xs) 0; display: flex; align-items: center; gap: var(--sp-sm); }
+  .member-section { margin-top: var(--sp-md); }
+  .member-section-label { font-size: 12px; color: var(--text-muted); margin-bottom: var(--sp-xs); }
+
+  /* Pixel Office */
+  .pixel-office {
+    background:
+      repeating-conic-gradient(rgba(255,255,255,0.02) 0% 25%, transparent 0% 50%)
+      0 0 / 32px 32px,
+      linear-gradient(180deg, #0D0D15, #12121D);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: var(--sp-xl);
+    margin: var(--sp-lg) 0;
+    min-height: 200px;
+    position: relative;
+  }
+  .pixel-office-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: var(--sp-lg);
+  }
+  .pixel-office-title { font-size: 14px; color: var(--text-secondary); }
+  .pixel-office-active { font-size: 12px; color: var(--text-muted); }
+  .pixel-chars { display: flex; gap: 48px; flex-wrap: wrap; justify-content: center; padding: var(--sp-xl) 0; }
+  .pixel-char { text-align: center; }
+  .pixel-desk {
+    width: 80px; height: 50px;
+    background: linear-gradient(135deg, #8B7355, #6B5B45);
+    border-radius: 4px;
+    margin: 0 auto var(--sp-sm);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pixel-char-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .pixel-char-status { font-size: 11px; color: var(--status-progress); }
+  .pixel-char-badge {
+    position: absolute; top: -8px; right: -8px;
+    width: 20px; height: 20px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+  }
+
+  /* Command Palette */
+  .cmd-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 120px;
+    z-index: 100;
+  }
+  .cmd-overlay.active { display: flex; }
+  .cmd-palette {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 560px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+  }
+  .cmd-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: var(--sp-lg);
+    color: var(--text-primary);
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+  }
+  .cmd-input::placeholder { color: var(--text-muted); }
+  .cmd-results { max-height: 300px; overflow-y: auto; }
+  .cmd-item {
+    padding: var(--sp-sm) var(--sp-lg);
+    display: flex; align-items: center; gap: var(--sp-md);
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .cmd-item:hover, .cmd-item.selected { background: var(--primary-muted); }
+  .cmd-item.selected { border-left: 2px solid var(--primary); }
+  .cmd-icon { color: var(--text-muted); font-size: 14px; width: 20px; text-align: center; }
+  .cmd-label { flex: 1; }
+  .cmd-shortcut { font-size: 12px; color: var(--text-muted); font-family: monospace; }
+  .cmd-footer {
+    padding: var(--sp-sm) var(--sp-lg);
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex; gap: var(--sp-lg);
+  }
+  .cmd-footer kbd {
+    background: var(--bg-elevated); padding: 1px 6px; border-radius: 4px;
+    font-size: 11px; border: 1px solid var(--border);
+  }
+
+  /* AI Suggest Badge */
+  .ai-suggest-row {
+    background: rgba(34, 211, 238, 0.05);
+    border-left: 2px solid var(--ai-suggest);
+  }
+
+  /* Task Detail */
+  .task-detail {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: var(--sp-xl);
+    margin: var(--sp-lg) 0;
+    max-width: 700px;
+  }
+  .task-detail-header { margin-bottom: var(--sp-lg); }
+  .task-detail-id { font-size: 12px; color: var(--text-muted); font-family: monospace; }
+  .task-detail-title { font-size: 20px; font-weight: 600; margin: var(--sp-sm) 0; }
+  .task-detail-meta { display: flex; gap: var(--sp-sm); flex-wrap: wrap; align-items: center; }
+  .task-detail-section { margin-top: var(--sp-xl); }
+  .task-detail-section h4 { font-size: 14px; font-weight: 700; margin-bottom: var(--sp-sm); }
+  .task-detail-section p, .task-detail-section li { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+  .task-detail-section ul { padding-left: 20px; }
+  .task-detail-section code {
+    background: var(--bg-elevated); padding: 2px 6px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--status-critical);
+  }
+
+  /* Sections */
+  .section { margin-bottom: var(--sp-2xl); }
+  .divider { border: none; border-top: 1px solid var(--border); margin: var(--sp-2xl) 0; }
+
+  /* Button */
+  .btn {
+    padding: var(--sp-sm) var(--sp-lg);
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: var(--bg-elevated); color: var(--text-primary); }
+
+  .btn-row { display: flex; gap: var(--sp-sm); margin-top: var(--sp-lg); }
+
+  /* Toggle */
+  .toggle-hint {
+    position: fixed; bottom: 20px; right: 20px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: var(--sp-sm) var(--sp-md);
+    font-size: 12px;
+    color: var(--text-muted);
+    z-index: 50;
+  }
+  .toggle-hint kbd { background: var(--bg-surface); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="demo-container">
+
+  <h1 style="color: var(--primary)">SIRA</h1>
+  <p class="subtitle">Visual Design Foundation Demo &mdash; AI+Human Team Intelligence Platform</p>
+
+  <!-- COLOR SYSTEM -->
+  <h2>Color System</h2>
+
+  <h3>Brand Colors</h3>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="preview" style="background:#A78BFA"></div><div class="info"><div class="name">Primary</div><div class="hex">#A78BFA</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:#8B5CF6"></div><div class="info"><div class="name">Primary Hover</div><div class="hex">#8B5CF6</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:rgba(124,58,237,0.12)"></div><div class="info"><div class="name">Primary Muted</div><div class="hex">12% opacity</div></div></div>
+  </div>
+
+  <h3>Dark Theme</h3>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="preview" style="background:#09090B"></div><div class="info"><div class="name">Base</div><div class="hex">#09090B</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:#18181B"></div><div class="info"><div class="name">Surface</div><div class="hex">#18181B</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:#27272A"></div><div class="info"><div class="name">Elevated</div><div class="hex">#27272A</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:#3F3F46"></div><div class="info"><div class="name">Border</div><div class="hex">#3F3F46</div></div></div>
+  </div>
+
+  <h3>Status Colors (Pipeline)</h3>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="preview" style="background:#6B7280"></div><div class="info"><div class="name">To Do</div><div class="hex">#6B7280</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:#F472B6"></div><div class="info"><div class="name">Design In Progress</div><div class="hex">#F472B6</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:#3B82F6"></div><div class="info"><div class="name">Ready for Dev</div><div class="hex">#3B82F6</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:#EAB308"></div><div class="info"><div class="name">In Progress</div><div class="hex">#EAB308</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:#A855F7"></div><div class="info"><div class="name">Ready for QA</div><div class="hex">#A855F7</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:#14B8A6"></div><div class="info"><div class="name">Ready for Release</div><div class="hex">#14B8A6</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:#22C55E"></div><div class="info"><div class="name">Done</div><div class="hex">#22C55E</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:#EF4444"></div><div class="info"><div class="name">Critical (Priority)</div><div class="hex">#EF4444</div></div></div>
+    <div class="color-swatch"><div class="preview" style="background:#22D3EE"></div><div class="info"><div class="name">AI Suggest</div><div class="hex">#22D3EE</div></div></div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- BADGES -->
+  <h2>Badges & Avatars</h2>
+
+  <h3>Status Badges (Pipeline)</h3>
+  <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
+    <span class="badge badge-todo">to do</span>
+    <span class="badge badge-design">design in progress</span>
+    <span class="badge badge-ready-dev">ready for dev</span>
+    <span class="badge badge-progress">in progress</span>
+    <span class="badge badge-ready-qa">ready for QA</span>
+    <span class="badge badge-ready-release">ready for release</span>
+    <span class="badge badge-done">done</span>
+    <span class="badge badge-critical">critical</span>
+    <span class="badge badge-ai">AI suggest</span>
+  </div>
+
+  <h3>Priority Badges</h3>
+  <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
+    <span class="badge badge-critical">critical</span>
+    <span class="badge badge-priority-high">high</span>
+    <span class="badge badge-priority-medium">medium</span>
+    <span class="badge badge-priority-low">low</span>
+  </div>
+
+  <h3>Avatars (Human vs AI)</h3>
+  <div style="display:flex; gap:16px; align-items:center;">
+    <div style="text-align:center">
+      <div class="avatar" style="background:#6366F1">A</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Human</div>
+    </div>
+    <div style="text-align:center">
+      <div class="avatar" style="background:#EC4899">B</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Human</div>
+    </div>
+    <div style="text-align:center">
+      <div class="avatar" style="background:#F97316">C</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Human</div>
+    </div>
+    <div style="text-align:center">
+      <div class="avatar avatar-ai" style="background:#18181B">D</div>
+      <div style="font-size:11px;color:var(--ai-suggest);margin-top:4px">AI Agent</div>
+    </div>
+    <div style="text-align:center">
+      <div class="avatar avatar-ai" style="background:#18181B">S</div>
+      <div style="font-size:11px;color:var(--ai-suggest);margin-top:4px">AI Agent</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- STATS BAR -->
+  <h2>Global Stats Bar</h2>
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">TO DO</div>
+      <div class="stat-number" style="color:var(--status-todo)">12</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">DESIGN IN PROGRESS</div>
+      <div class="stat-number" style="color:var(--status-design)">3</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">READY FOR DEV</div>
+      <div class="stat-number" style="color:var(--status-ready-dev)">5</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">IN PROGRESS</div>
+      <div class="stat-number" style="color:var(--status-progress)">8</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">READY FOR QA</div>
+      <div class="stat-number" style="color:var(--status-ready-qa)">2</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">READY FOR RELEASE</div>
+      <div class="stat-number" style="color:var(--status-ready-release)">1</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">DONE</div>
+      <div class="stat-number" style="color:var(--status-done)">24</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PIXEL OFFICE -->
+  <h2>Pixel Office</h2>
+  <div class="pixel-office">
+    <div class="pixel-office-header">
+      <span class="pixel-office-title">pixel office</span>
+      <span class="pixel-office-active">Active: 5</span>
+    </div>
+    <div class="pixel-chars">
+      <div class="pixel-char">
+        <div class="pixel-char-name">Alice</div>
+        <div class="pixel-desk">
+          <div class="avatar" style="background:#6366F1;width:24px;height:24px;font-size:10px">A</div>
+        </div>
+        <div class="pixel-char-status" style="color:var(--status-progress)">2 tasks in-progress</div>
+      </div>
+      <div class="pixel-char">
+        <div class="pixel-char-name">Bob</div>
+        <div class="pixel-desk">
+          <div class="avatar" style="background:#EC4899;width:24px;height:24px;font-size:10px">B</div>
+          <div class="pixel-char-badge" style="background:var(--status-progress);color:#000">!</div>
+        </div>
+        <div class="pixel-char-status" style="color:var(--status-review)">3 tasks in-review</div>
+      </div>
+      <div class="pixel-char">
+        <div class="pixel-char-name">Charlie</div>
+        <div class="pixel-desk">
+          <div class="avatar" style="background:#F97316;width:24px;height:24px;font-size:10px">C</div>
+        </div>
+        <div class="pixel-char-status" style="color:var(--status-progress)">1 task in-progress</div>
+      </div>
+      <div class="pixel-char">
+        <div class="pixel-char-name">Diana</div>
+        <div class="pixel-desk">
+          <div class="avatar avatar-ai" style="background:#18181B;width:24px;height:24px;font-size:10px;border-width:1.5px">D</div>
+          <div class="pixel-char-badge" style="background:var(--ai-suggest);color:#000">W</div>
+        </div>
+        <div class="pixel-char-status" style="color:var(--ai-suggest)">Writing code</div>
+      </div>
+      <div class="pixel-char">
+        <div class="pixel-char-name">Evan</div>
+        <div class="pixel-desk">
+          <div class="avatar" style="background:#22C55E;width:24px;height:24px;font-size:10px">E</div>
+          <div class="pixel-char-badge" style="background:var(--status-progress);color:#000">!</div>
+        </div>
+        <div class="pixel-char-status" style="color:var(--status-progress)">1 task in-progress</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- TASK TABLE -->
+  <h2>Task Table</h2>
+  <div class="project-group">
+    <div class="project-header">
+      <div class="project-dot" style="background:#6366F1"></div>
+      <span class="project-name">Apple App</span>
+      <span class="project-count">8</span>
+    </div>
+    <table class="task-table">
+      <thead>
+        <tr><th>ID</th><th>TITLE</th><th>STATUS</th><th>PRIORITY</th><th>ASSIGNEE</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="task-id">TASK-001</td>
+          <td class="task-title">JWT token refresh logic fix</td>
+          <td><span class="badge badge-progress">in progress</span></td>
+          <td><span class="badge badge-priority-high">high</span></td>
+          <td><div class="avatar" style="background:#6366F1;width:24px;height:24px;font-size:10px">A</div></td>
+        </tr>
+        <tr>
+          <td class="task-id">TASK-002</td>
+          <td class="task-title">UI component refactoring</td>
+          <td><span class="badge badge-design">design in progress</span></td>
+          <td><span class="badge badge-priority-medium">medium</span></td>
+          <td><div class="avatar" style="background:#F97316;width:24px;height:24px;font-size:10px">C</div></td>
+        </tr>
+        <tr class="ai-suggest-row">
+          <td class="task-id">TASK-003</td>
+          <td class="task-title">Payment API integration <span class="badge badge-ai">AI: ready for QA</span></td>
+          <td><span class="badge badge-ready-qa">ready for QA</span></td>
+          <td><span class="badge badge-priority-high">high</span></td>
+          <td><div class="avatar" style="background:#EC4899;width:24px;height:24px;font-size:10px">B</div></td>
+        </tr>
+        <tr>
+          <td class="task-id">TASK-004</td>
+          <td class="task-title">Search API endpoint</td>
+          <td><span class="badge badge-ready-dev">ready for dev</span></td>
+          <td><span class="badge badge-priority-medium">medium</span></td>
+          <td><div class="avatar" style="background:#6366F1;width:24px;height:24px;font-size:10px">A</div></td>
+        </tr>
+        <tr>
+          <td class="task-id">TASK-005</td>
+          <td class="task-title">Release v1.2.0 deploy script</td>
+          <td><span class="badge badge-ready-release">ready for release</span></td>
+          <td><span class="badge badge-priority-high">high</span></td>
+          <td><div class="avatar avatar-ai" style="background:#18181B;width:24px;height:24px;font-size:10px;border-width:1.5px">D</div></td>
+        </tr>
+        <tr>
+          <td class="task-id">ISSUE-001</td>
+          <td class="task-title">Payment screen infinite loading bug</td>
+          <td><span class="badge badge-todo">to do</span></td>
+          <td><span class="badge badge-critical">critical</span></td>
+          <td><div class="avatar" style="background:#EC4899;width:24px;height:24px;font-size:10px">B</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- MEMBER CARDS -->
+  <h2>Member Cards</h2>
+  <div class="member-grid">
+    <div class="member-card">
+      <div class="member-header">
+        <div class="avatar" style="background:#6366F1">A</div>
+        <span class="member-name">Alice</span>
+        <span class="member-status">active</span>
+        <span style="margin-left:auto;background:var(--primary);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">2</span>
+      </div>
+      <div class="member-section">
+        <div class="member-section-label">in progress 2</div>
+        <div class="member-task-item"><span class="task-id">TASK-001</span> JWT token refresh <span class="badge badge-priority-high" style="margin-left:auto">high</span></div>
+        <div class="member-task-item"><span class="task-id">TASK-008</span> Auth middleware refactor <span class="badge badge-priority-high" style="margin-left:auto">high</span></div>
+      </div>
+    </div>
+
+    <div class="member-card">
+      <div class="member-header">
+        <div class="avatar avatar-ai" style="background:#18181B">D</div>
+        <span class="member-name">Diana</span>
+        <span class="member-status" style="color:var(--ai-suggest);background:rgba(34,211,238,0.15)">AI agent</span>
+      </div>
+      <div class="member-section">
+        <div class="member-section-label">in progress 0</div>
+        <div style="color:var(--text-muted);font-size:13px">No active tasks</div>
+      </div>
+      <div class="member-section">
+        <div class="member-section-label">today</div>
+        <div style="color:var(--text-muted);font-size:13px">Wrote 142 lines in payment.ts</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- TASK DETAIL -->
+  <h2>Task Detail (.md Rendered)</h2>
+  <div class="task-detail">
+    <div class="task-detail-header">
+      <div class="task-detail-id">ISSUE-001 &nbsp; <span class="badge badge-todo" style="font-size:11px">payment</span> <span class="badge badge-todo" style="font-size:11px">bug</span></div>
+      <div class="task-detail-title">Payment infinite loading bug</div>
+      <div class="task-detail-meta">
+        <span class="badge badge-todo">to do</span>
+        <span class="badge badge-critical">critical</span>
+        <div class="avatar" style="background:#EC4899;width:22px;height:22px;font-size:9px">B</div>
+        <span style="font-size:13px">Bob</span>
+        <span style="font-size:12px;color:var(--text-muted);margin-left:auto">2026.02.24</span>
+      </div>
+    </div>
+
+    <div class="task-detail-section">
+      <h4>Symptoms</h4>
+      <p>After clicking payment button, loading spinner spins indefinitely. Payment does not proceed. Reproduction rate higher on slow networks.</p>
+    </div>
+
+    <div class="task-detail-section">
+      <h4>Root Cause</h4>
+      <p>Payment state stuck at <code>loading</code>. Previous attempt's Completer not resolved before new request.</p>
+    </div>
+
+    <div class="task-detail-section">
+      <h4>Solution</h4>
+      <ul>
+        <li>Cancel in-flight payment request on navigation</li>
+        <li>Add timeout (30s)</li>
+      </ul>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary">Edit</button>
+      <button class="btn btn-ghost">View .md source</button>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- TYPOGRAPHY -->
+  <h2>Typography Scale</h2>
+  <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:12px;padding:var(--sp-xl);">
+    <div style="font-size:30px;font-weight:700;line-height:1.2;margin-bottom:16px">Display 30px Bold</div>
+    <div style="font-size:24px;font-weight:600;line-height:1.3;margin-bottom:12px">Heading 1 &mdash; 24px Semibold</div>
+    <div style="font-size:20px;font-weight:600;line-height:1.35;margin-bottom:12px">Heading 2 &mdash; 20px Semibold</div>
+    <div style="font-size:16px;font-weight:600;line-height:1.4;margin-bottom:12px">Heading 3 &mdash; 16px Semibold</div>
+    <div style="font-size:14px;line-height:1.5;margin-bottom:12px;color:var(--text-secondary)">Body &mdash; 14px Regular. SIRA는 AI+Human 하이브리드 팀을 위한 작업 인텔리전스 플랫폼입니다.</div>
+    <div style="font-size:12px;line-height:1.5;margin-bottom:12px;color:var(--text-muted)">Small &mdash; 12px Regular. Supplementary text for badges and labels.</div>
+    <div style="font-size:13px;line-height:1.5;font-family:'JetBrains Mono',monospace;color:var(--text-secondary)">Mono &mdash; 13px TASK-001, .sira/index.json, sira decompose</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- BUTTONS -->
+  <h2>Buttons</h2>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;">
+    <button class="btn btn-primary">Primary Action</button>
+    <button class="btn btn-ghost">Secondary Action</button>
+    <button class="btn btn-primary" style="background:var(--status-done)">Approve</button>
+    <button class="btn btn-ghost" style="border-color:var(--status-critical);color:var(--status-critical)">Reject</button>
+    <button class="btn btn-ghost" style="border-color:var(--ai-suggest);color:var(--ai-suggest)">AI Suggestion</button>
+  </div>
+
+</div>
+
+<!-- COMMAND PALETTE (click to toggle) -->
+<div class="cmd-overlay" id="cmdOverlay" onclick="this.classList.remove('active')">
+  <div class="cmd-palette" onclick="event.stopPropagation()">
+    <input class="cmd-input" placeholder="무엇을 하시겠어요? 명령어를 입력하거나 자연어로 작성하세요..." value="결제 시스템 구현해줘" autofocus>
+    <div class="cmd-results">
+      <div class="cmd-item selected">
+        <span class="cmd-icon" style="color:var(--ai-suggest)">✦</span>
+        <span class="cmd-label">AI에게 태스크 분해 요청 <span style="color:var(--text-muted);font-size:12px">— 자연어 → 에픽/스토리/태스크 자동 생성</span></span>
+        <span class="cmd-shortcut"><kbd>Enter</kbd></span>
+      </div>
+      <div class="cmd-item">
+        <span class="cmd-icon">+</span>
+        <span class="cmd-label">새 태스크 만들기</span>
+        <span class="cmd-shortcut"><kbd>N</kbd></span>
+      </div>
+      <div class="cmd-item">
+        <span class="cmd-icon">📋</span>
+        <span class="cmd-label">프로젝트 전환</span>
+        <span class="cmd-shortcut"><kbd>P</kbd></span>
+      </div>
+      <div class="cmd-item">
+        <span class="cmd-icon">@</span>
+        <span class="cmd-label">멤버에게 할당</span>
+        <span class="cmd-shortcut"><kbd>A</kbd></span>
+      </div>
+      <div class="cmd-item">
+        <span class="cmd-icon">🔍</span>
+        <span class="cmd-label">태스크 검색</span>
+        <span class="cmd-shortcut"><kbd>/</kbd></span>
+      </div>
+      <div class="cmd-item">
+        <span class="cmd-icon" style="color:var(--ai-suggest)">✦</span>
+        <span class="cmd-label">AI에게 질문하기 <span style="color:var(--text-muted);font-size:12px">— "이번 스프린트 지연 원인이 뭐야?"</span></span>
+        <span class="cmd-shortcut"><kbd>?</kbd></span>
+      </div>
+      <div class="cmd-item">
+        <span class="cmd-icon">⚡</span>
+        <span class="cmd-label">뷰 전환 <span style="color:var(--text-muted);font-size:12px">— 테이블 / 간트 / 보드</span></span>
+        <span class="cmd-shortcut"><kbd>V</kbd></span>
+      </div>
+    </div>
+    <div class="cmd-footer">
+      <span><kbd>↑↓</kbd> 이동</span>
+      <span><kbd>Enter</kbd> 실행</span>
+      <span><kbd>Esc</kbd> 닫기</span>
+      <span style="margin-left:auto;color:var(--ai-suggest)">✦ = AI 기능</span>
+    </div>
+  </div>
+</div>
+
+<div class="toggle-hint">
+  Press <kbd>Cmd+K</kbd> to toggle Command Palette
+</div>
+
+<script>
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('cmdOverlay').classList.toggle('active');
+  }
+  if (e.key === 'Escape') {
+    document.getElementById('cmdOverlay').classList.remove('active');
+  }
+});
+</script>
+
+</body>
+</html>

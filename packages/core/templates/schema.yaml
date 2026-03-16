@@ -1,0 +1,33 @@
+# .sira/schema.yaml — SIRA Frontmatter Schema Definition
+# 이 파일은 tasks/ 디렉토리 내 .md 파일의 frontmatter 필드를 정의합니다.
+
+task:
+  required:
+    - id          # string — 고유 식별자 (예: TASK-001)
+    - title       # string — 태스크 제목
+    - created_at  # string — 생성일 (YYYY-MM-DD)
+    - updated_at  # string — 수정일 (YYYY-MM-DD)
+  optional:
+    - status          # enum: backlog, todo, in_progress, review, done, cancelled (기본: backlog)
+    - assignee        # string — 담당자 이름
+    - priority        # enum: critical, high, medium, low (기본: medium)
+    - area            # enum: web, server, shared
+    - epic_id         # string — 소속 에픽 ID
+    - story_id        # string — 소속 스토리 ID
+    - related_files   # string[] — 관련 코드 파일 경로
+    - tags            # string[] — 태그
+    - start_date      # string — 시작일 (YYYY-MM-DD)
+    - due_date        # string — 마감일 (YYYY-MM-DD)
+
+epic:
+  required:
+    - id          # string — 고유 식별자 (예: EP-001)
+    - title       # string — 에픽 제목
+    - created_at  # string — 생성일
+    - updated_at  # string — 수정일
+  optional:
+    - status      # enum: backlog, in_progress, done, cancelled (기본: backlog)
+    - owner       # string — 에픽 소유자
+    - priority    # enum: critical, high, medium, low (기본: medium)
+    - start_date  # string — 시작일
+    - due_date    # string — 마감일

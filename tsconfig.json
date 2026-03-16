@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "strict": true
+  },
+  "references": [
+    { "path": "packages/core" },
+    { "path": "packages/ui" },
+    { "path": "apps/web" },
+    { "path": "apps/cli" }
+  ]
+}

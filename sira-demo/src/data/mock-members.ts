@@ -1,0 +1,60 @@
+import { TeamMember } from './types';
+
+export const mockMembers: TeamMember[] = [
+  {
+    id: 'human-1',
+    name: '김민수',
+    type: 'human',
+    role: 'admin',
+    avatar: '민수',
+    color: '#3B82F6',
+  },
+  {
+    id: 'human-2',
+    name: '이지영',
+    type: 'human',
+    role: 'member',
+    avatar: '지영',
+    color: '#EC4899',
+  },
+  {
+    id: 'human-3',
+    name: '박태현',
+    type: 'human',
+    role: 'member',
+    avatar: '태현',
+    color: '#10B981',
+  },
+  {
+    id: 'human-4',
+    name: '최수진',
+    type: 'human',
+    role: 'member',
+    avatar: '수진',
+    color: '#F59E0B',
+  },
+  {
+    id: 'ai-1',
+    name: 'Claude-Backend',
+    type: 'ai',
+    role: 'member',
+    avatar: '🤖',
+    color: '#8B5CF6',
+  },
+  {
+    id: 'ai-2',
+    name: 'Claude-Frontend',
+    type: 'ai',
+    role: 'member',
+    avatar: '🤖',
+    color: '#06B6D4',
+  },
+  {
+    id: 'ai-3',
+    name: 'Claude-DevOps',
+    type: 'ai',
+    role: 'member',
+    avatar: '🤖',
+    color: '#F97316',
+  },
+];
