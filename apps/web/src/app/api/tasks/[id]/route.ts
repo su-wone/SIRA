@@ -40,9 +40,10 @@ export async function GET(
     }
 
     return NextResponse.json({ data: { ...entry, content } });
-  } catch (e: any) {
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Unknown error";
     return NextResponse.json(
-      { error: { code: "INTERNAL", message: e.message } },
+      { error: { code: "INTERNAL", message } },
       { status: 500 },
     );
   }
@@ -90,9 +91,10 @@ export async function PATCH(
     writeIndex(root, updated);
 
     return NextResponse.json({ data: { id, ...updates } });
-  } catch (e: any) {
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Unknown error";
     return NextResponse.json(
-      { error: { code: "INTERNAL", message: e.message } },
+      { error: { code: "INTERNAL", message } },
       { status: 500 },
     );
   }

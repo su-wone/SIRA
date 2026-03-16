@@ -21,7 +21,6 @@ interface CharacterState {
   frame: number;
 }
 
-const CHAR_SIZE = 24;
 const DESK_W = 48;
 const DESK_H = 32;
 const PADDING = 80;

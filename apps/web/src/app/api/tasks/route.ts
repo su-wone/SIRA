@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { readIndex, rebuildIfCorrupt, readConfig } from "@sira/core";
-import path from "node:path";
+import { rebuildIfCorrupt, readConfig } from "@sira/core";
 
 function getProjectRoot(): string {
   return process.env.SIRA_PROJECT_ROOT ?? process.cwd();
@@ -20,9 +19,10 @@ export async function GET() {
     }
 
     return NextResponse.json({ data: { tasks: index.entries, team } });
-  } catch (e: any) {
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Unknown error";
     return NextResponse.json(
-      { error: { code: "INTERNAL", message: e.message } },
+      { error: { code: "INTERNAL", message } },
       { status: 500 },
     );
   }

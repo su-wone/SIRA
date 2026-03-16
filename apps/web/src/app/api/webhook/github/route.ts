@@ -68,9 +68,10 @@ export async function POST(request: Request) {
         removed: changes.removed.length,
       },
     });
-  } catch (e: any) {
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Unknown error";
     return NextResponse.json(
-      { error: { code: "INTERNAL", message: e.message } },
+      { error: { code: "INTERNAL", message } },
       { status: 500 },
     );
   }

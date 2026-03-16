@@ -6,7 +6,10 @@ type SSEHandler = (data: unknown) => void;
 
 export function useSSE(handlers: Record<string, SSEHandler>) {
   const handlersRef = useRef(handlers);
-  handlersRef.current = handlers;
+
+  useEffect(() => {
+    handlersRef.current = handlers;
+  });
 
   useEffect(() => {
     let es: EventSource | null = null;
@@ -32,7 +35,6 @@ export function useSSE(handlers: Record<string, SSEHandler>) {
 
       es.onerror = () => {
         es?.close();
-        // Auto-reconnect after 5s
         reconnectTimeout = setTimeout(connect, 5000);
       };
     }

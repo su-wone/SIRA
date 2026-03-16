@@ -7,7 +7,7 @@ import { useTaskStore } from "@/stores/useTaskStore";
 import { STATUS_COLORS, PRIORITY_COLORS, getInitials, getAvatarColor } from "@/lib/colors";
 
 export default function TasksPage() {
-  const { tasks, setTasks, setLoading } = useTaskStore();
+  const { tasks, setTasks } = useTaskStore();
   const [filterStatus, setFilterStatus] = useState<string>("");
   const [filterAssignee, setFilterAssignee] = useState<string>("");
   const [sortField, setSortField] = useState<string>("updated_at");

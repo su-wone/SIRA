@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useTaskStore, type TaskEntry } from "@/stores/useTaskStore";
 import { useTeamStore, type TeamMember } from "@/stores/useTeamStore";
-import { STATUS_COLORS, getInitials, getAvatarColor } from "@/lib/colors";
+import { getInitials, getAvatarColor } from "@/lib/colors";
 import { PixelOffice } from "@/components/pixel-office/PixelOffice";
 
 export default function DashboardPage() {
