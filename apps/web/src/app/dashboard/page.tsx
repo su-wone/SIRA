@@ -6,6 +6,8 @@ import { useTaskStore, type TaskEntry } from "@/stores/useTaskStore";
 import { useTeamStore, type TeamMember } from "@/stores/useTeamStore";
 import { getInitials, getAvatarColor } from "@/lib/colors";
 import { PixelOffice } from "@/components/pixel-office/PixelOffice";
+import { AISuggestionList } from "@/components/AISuggestionList";
+import { NaturalLanguageInput } from "@/components/NaturalLanguageInput";
 
 export default function DashboardPage() {
   const { tasks, setTasks, isLoading, setLoading } = useTaskStore();
@@ -33,6 +35,33 @@ export default function DashboardPage() {
     todo: tasks.filter((t) => t.status === "todo").length,
   };
 
+  const mockSuggestions = [
+    {
+      taskId: "SIRA-003",
+      currentStatus: "todo",
+      suggestedStatus: "in_progress",
+      reason: "관련 파일 src/api/auth.ts가 최근 수정되었고 PR #12가 열려 있습니다. 작업이 이미 시작된 것으로 보입니다.",
+    },
+    {
+      taskId: "SIRA-007",
+      currentStatus: "in_progress",
+      suggestedStatus: "review",
+      reason: "커밋 로그에 'feat: complete task SIRA-007' 메시지가 있고 관련 파일 변경이 완료된 것으로 보입니다.",
+    },
+    {
+      taskId: "SIRA-010",
+      currentStatus: "review",
+      suggestedStatus: "done",
+      reason: "PR #15가 머지되었고 관련 테스트가 모두 통과했습니다.",
+    },
+    {
+      taskId: "SIRA-001",
+      currentStatus: "backlog",
+      suggestedStatus: "todo",
+      reason: "스프린트 계획에 포함되어 있으며 담당자가 배정되었습니다.",
+    },
+  ];
+
   return (
     <DashboardLayout>
       <h1 className="mb-6 text-2xl font-bold">Dashboard</h1>
@@ -45,6 +74,11 @@ export default function DashboardPage() {
         <StatCard label="완료" value={stats.done} color="text-green-400" />
         <StatCard label="할 일" value={stats.todo} color="text-blue-400" />
         <StatCard label="백로그" value={stats.backlog} color="text-gray-400" />
+      </div>
+
+      {/* AI 상태 제안 */}
+      <div className="mb-8">
+        <AISuggestionList suggestions={mockSuggestions} />
       </div>
 
       {/* 픽셀 오피스 (UX8) */}
@@ -72,6 +106,12 @@ export default function DashboardPage() {
           </p>
         </div>
       )}
+
+      {/* AI 태스크 생성 */}
+      <section className="mt-8">
+        <h2 className="mb-4 text-lg font-semibold">AI 태스크 생성</h2>
+        <NaturalLanguageInput />
+      </section>
     </DashboardLayout>
   );
 }
