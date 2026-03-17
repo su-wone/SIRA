@@ -2,10 +2,8 @@ import { NextResponse } from "next/server";
 import {
   verifyGitHubSignature,
   extractChangedTaskFiles,
-  pullLatest,
-  incrementalUpdate,
-  writeIndex,
 } from "@sira/core";
+import { isGitHubMode, invalidateCache } from "@/lib/github";
 import { broadcastSSE } from "@/lib/sse";
 
 function getProjectRoot(): string {
@@ -40,14 +38,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ data: { message: "No task changes" } });
     }
 
-    const root = getProjectRoot();
-
-    // Pull latest changes
-    await pullLatest(root);
-
-    // Update index
-    const index = incrementalUpdate(root);
-    writeIndex(root, index);
+    if (isGitHubMode()) {
+      // On Vercel: just invalidate cache, no local git pull needed
+      invalidateCache();
+    } else {
+      // Local mode: pull and rebuild index
+      const { pullLatest, incrementalUpdate, writeIndex } = await import("@sira/core");
+      const root = getProjectRoot();
+      await pullLatest(root);
+      const index = incrementalUpdate(root);
+      writeIndex(root, index);
+    }
 
     // Broadcast SSE events
     for (const f of changes.added) {
@@ -59,7 +60,11 @@ export async function POST(request: Request) {
     for (const f of changes.removed) {
       broadcastSSE("task:deleted", { file: f });
     }
-    broadcastSSE("index:rebuilt", { entries: index.entries.length });
+    broadcastSSE("index:rebuilt", {
+      added: changes.added.length,
+      modified: changes.modified.length,
+      removed: changes.removed.length,
+    });
 
     return NextResponse.json({
       data: {

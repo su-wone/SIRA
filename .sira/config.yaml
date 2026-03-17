@@ -1,0 +1,18 @@
+project: SIRA
+version: "1"
+team:
+  - name: suwon
+    role: admin
+    type: human
+    github_username: su-wone
+  - name: claude
+    role: agent
+    type: ai
+    github_username: claude-ai
+  - name: 김민수
+    role: member
+    type: human
+    github_username: minsu-kim
+  - name: cursor
+    role: agent
+    type: ai

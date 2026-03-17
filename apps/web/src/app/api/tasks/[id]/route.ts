@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isGitHubMode, fetchTask, updateTask } from "@/lib/github";
 import {
   rebuildIfCorrupt,
   findById,
@@ -20,6 +21,19 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+
+    if (isGitHubMode()) {
+      const result = await fetchTask(id);
+      if (!result) {
+        return NextResponse.json(
+          { error: { code: "NOT_FOUND", message: `태스크를 찾을 수 없습니다: ${id}` } },
+          { status: 404 },
+        );
+      }
+      return NextResponse.json({ data: { ...result.entry, content: result.content } });
+    }
+
+    // Local filesystem mode
     const root = getProjectRoot();
     const index = rebuildIfCorrupt(root);
     const entry = findById(index.entries, id);
@@ -56,6 +70,13 @@ export async function PATCH(
   try {
     const { id } = await params;
     const updates = await request.json();
+
+    if (isGitHubMode()) {
+      const result = await updateTask(id, updates);
+      return NextResponse.json({ data: result });
+    }
+
+    // Local filesystem mode
     const root = getProjectRoot();
     const index = rebuildIfCorrupt(root);
     const entry = findById(index.entries, id);
@@ -78,7 +99,6 @@ export async function PATCH(
     const raw = fs.readFileSync(filePath, "utf-8");
     const { data, content } = parseMarkdown(raw);
 
-    // Apply updates to frontmatter
     for (const [key, value] of Object.entries(updates)) {
       data[key] = value;
     }
@@ -86,7 +106,6 @@ export async function PATCH(
 
     fs.writeFileSync(filePath, stringifyMarkdown(data, content), "utf-8");
 
-    // Refresh index
     const updated = incrementalUpdate(root);
     writeIndex(root, updated);
 

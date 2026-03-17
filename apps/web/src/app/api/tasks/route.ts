@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isGitHubMode, fetchAllTasks, fetchTeam } from "@/lib/github";
 import { rebuildIfCorrupt, readConfig } from "@sira/core";
 
 function getProjectRoot(): string {
@@ -7,6 +8,12 @@ function getProjectRoot(): string {
 
 export async function GET() {
   try {
+    if (isGitHubMode()) {
+      const [tasks, team] = await Promise.all([fetchAllTasks(), fetchTeam()]);
+      return NextResponse.json({ data: { tasks, team } });
+    }
+
+    // Local filesystem mode
     const root = getProjectRoot();
     const index = rebuildIfCorrupt(root);
 
