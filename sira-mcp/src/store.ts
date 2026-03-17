@@ -43,8 +43,8 @@ export class TaskStore {
 
   constructor(projectDir: string) {
     this.projectDir = projectDir;
-    this.tasksDir = path.join(projectDir, ".sira", "tasks");
-    this.epicsDir = path.join(projectDir, ".sira", "epics");
+    this.tasksDir = path.join(projectDir, "tasks");
+    this.epicsDir = path.join(projectDir, "tasks", "epics");
   }
 
   async load(): Promise<void> {
