@@ -19,6 +19,7 @@
     "node": ">=18"
   },
   "packageManager": "npm@10.8.2",
-  "optionalDependencies": {
+  "dependencies": {
+    "lightningcss": "^1.31.1"
   }
 }
