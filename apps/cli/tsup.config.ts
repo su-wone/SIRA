@@ -6,8 +6,7 @@ export default defineConfig({
   dts: false,
   clean: true,
   platform: "node",
-  noExternal: ["@sira/core"],
-  external: ["gray-matter", "js-yaml", "simple-git", "zod", "commander"],
+  external: ["@sira/core", "gray-matter", "js-yaml", "simple-git", "zod", "commander"],
   banner: {
     js: "#!/usr/bin/env node",
   },
